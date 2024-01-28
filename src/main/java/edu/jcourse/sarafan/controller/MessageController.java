@@ -1,7 +1,7 @@
 package edu.jcourse.sarafan.controller;
 
-import edu.jcourse.sarafan.entity.Message;
-import edu.jcourse.sarafan.repository.MessageRepository;
+import edu.jcourse.sarafan.dto.MessageDto;
+import edu.jcourse.sarafan.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,35 +15,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final MessageRepository messageRepository;
+    private final MessageService messageService;
 
     @GetMapping
-    public List<Message> getAll() {
-        return messageRepository.findAll();
+    public List<MessageDto> getAll() {
+        return messageService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Message get(@PathVariable Long id) {
-        return messageRepository.findById(id)
+    public MessageDto get(@PathVariable Long id) {
+        return messageService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Message create(@RequestBody Message message) {
-        return messageRepository.save(message);
+    public MessageDto create(@RequestBody MessageDto message) {
+        return messageService.create(message);
     }
 
     @PutMapping("/{id}")
-    public Message update(@PathVariable Long id,
-                          @RequestBody Message message) {
-        return messageRepository.update(id, message)
+    public MessageDto update(@PathVariable Long id,
+                             @RequestBody MessageDto message) {
+        return messageService.update(id, message)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return messageRepository.deleteById(id) ?
+        return messageService.deleteById(id) ?
                 ResponseEntity.noContent().build() :
                 ResponseEntity.notFound().build();
     }

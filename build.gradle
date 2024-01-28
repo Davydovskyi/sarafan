@@ -15,7 +15,15 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.postgresql:postgresql:$postgreSqlVersion"
+    implementation "org.flywaydb:flyway-core:$flywayDbVersion"
+//    // to avoid error: Unsupported Database - https://github.com/flyway/flyway/issues/3780
+    implementation "org.flywaydb:flyway-database-postgresql:$flywayDbVersion"
 
+    implementation "org.mapstruct:mapstruct:$mapStructVersion"
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
