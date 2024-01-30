@@ -20,3 +20,12 @@ spring:
         jdbc:
           fetch_size: 100
           batch_size: 100
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ----------------------------
+            client-secret: ---------------------------
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope: openid, email, profile
