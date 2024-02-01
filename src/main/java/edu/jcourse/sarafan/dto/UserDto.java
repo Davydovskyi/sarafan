@@ -8,28 +8,31 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import edu.jcourse.sarafan.entity.Gender;
 import edu.jcourse.sarafan.entity.Role;
 import lombok.Builder;
+import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @FieldNameConstants
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record UserDto(
-        String id,
-        String name,
-        String userPic,
-        String email,
-        Gender gender,
-        Role role,
-        String locale,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime lastVisit,
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime createdAt,
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime updatedAt) {
+@Value
+public class UserDto implements Serializable {
+    String id;
+    String name;
+    String userPic;
+    String email;
+    Gender gender;
+    Role role;
+    String locale;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime lastVisit;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime createdAt;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime updatedAt;
 }

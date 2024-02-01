@@ -3,6 +3,7 @@ package edu.jcourse.sarafan.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = false)
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User extends AuditingEntity<String> {
+public class User extends AuditingEntity<String>{
     @Id
     private String id;
     @Column(name = "name", nullable = false)

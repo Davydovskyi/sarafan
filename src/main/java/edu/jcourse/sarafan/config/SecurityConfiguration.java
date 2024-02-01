@@ -13,12 +13,14 @@ import org.springframework.security.config.annotation.web.configurers.AnonymousC
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,11 +34,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .anonymous(AnonymousConfigurer::disable)
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/", "/login**", "/css/**", "/js/**", "/error**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint(userInfo ->
-                                userInfo.oidcUserService(oidcUserService())));
+                                userInfo.oidcUserService(oidcUserService())))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/").permitAll());
         return http.build();
     }
 
@@ -47,7 +51,9 @@ public class SecurityConfiguration {
             UserDto userDto = userService.findById(id)
                     .orElseGet(() -> userService.create(createUserDto(request.getIdToken())));
 
-            return new DefaultOidcUser(Collections.singleton(userDto.role()), request.getIdToken());
+            OidcUserInfo userInfo = new OidcUserInfo(Map.of("user", userDto));
+
+            return new DefaultOidcUser(Collections.singleton(userDto.getRole()), request.getIdToken(), userInfo);
         };
     }
 

@@ -1,4 +1,9 @@
 spring:
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
+      schema: classpath:/sql/session_tables.sql
   datasource:
     username: postgres
     password: postgres
@@ -25,7 +30,7 @@ spring:
       client:
         registration:
           google:
-            client-id: ----------------------------
-            client-secret: ---------------------------
+            client-id: ------------------
+            client-secret: ----------------------
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope: openid, email, profile

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Sarafan</title>
     <script src="https://unpkg.com/vue@3.0"></script>
     <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+    <script th:inline="javascript">
+        const frontendData = [[${frontendData}]];
+    </script>
 </head>
 <body>
 <h3>Sarafan</h3>

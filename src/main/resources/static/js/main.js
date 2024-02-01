@@ -88,17 +88,6 @@ const MessageList = {
         'message-form': MessageForm,
         'message-row': MessageRow
     },
-    async created() {
-        try {
-            const response = await axios.get('/messages');
-            response.data.forEach(message => {
-                this.messages.push(message);
-            })
-        } catch (e) {
-            console.error('Error fetching messages:', e);
-            alert(e.response.data.message);
-        }
-    },
     methods: {
         updateMethod: function (message) {
             this.message = message;
@@ -107,16 +96,35 @@ const MessageList = {
 }
 
 const app = Vue.createApp({
-    template: '<messages-list :messages="messages"/>',
+    template:
+        `<div>
+            <div v-if="!profile">You should be logged in <a href="/login">Google</a></div>
+            <div v-else>
+                    <div>{{ profile.name }}&nbsp;<a href="/logout">Logout</a></div>
+                    <messages-list :messages="messages" />
+            </div>
+        </div>`,
     components: {
         'messages-list': MessageList
     },
 
     data() {
         return {
-            messages: []
+            messages: frontendData.messages,
+            profile: frontendData.profile
         };
     },
+    async created() {
+        // try {
+        //     const response = await axios.get('/messages');
+        //     response.data.forEach(message => {
+        //         this.messages.push(message);
+        //     })
+        // } catch (e) {
+        //     console.error('Error fetching messages:', e);
+        //     alert(e.response.data.message);
+        // }
+    }
 })
 
 app.mount('#app');
