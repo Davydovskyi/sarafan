@@ -3,6 +3,7 @@ package edu.jcourse.sarafan.controller;
 import edu.jcourse.sarafan.dto.UserDto;
 import edu.jcourse.sarafan.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -21,6 +22,8 @@ import java.util.Optional;
 public class MainController {
 
     private final MessageService messageService;
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     @GetMapping
     public String index(Model model,
@@ -37,6 +40,7 @@ public class MainController {
         data.put("messages", messageService.findAll());
 
         model.addAttribute("frontendData", data);
+        model.addAttribute("isDevMode", "dev".equals(activeProfile));
         return "index";
     }
 }

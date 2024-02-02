@@ -44,3 +44,5 @@ bin/
 target
 out
 .idea/*
+
+node_modules

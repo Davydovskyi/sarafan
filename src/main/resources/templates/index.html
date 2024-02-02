@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Sarafan</title>
-    <script src="https://unpkg.com/vue@3.0"></script>
-    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
     <script th:inline="javascript">
         const frontendData = [[${frontendData}]];
     </script>
@@ -13,6 +11,6 @@
 <h3>Sarafan</h3>
 <div id="app">
 </div>
-<script src="/js/main.js"></script>
+<script th:src="${isDevMode} ? 'http://localhost:8000/main.js' : '/js/main.js'"></script>
 </body>
 </html>
