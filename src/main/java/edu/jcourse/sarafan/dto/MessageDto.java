@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record MessageDto(
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         Long id,
         String text,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)

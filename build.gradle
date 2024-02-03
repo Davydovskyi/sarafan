@@ -28,6 +28,7 @@ dependencies {
     implementation "org.flywaydb:flyway-database-postgresql:$flywayDbVersion"
 
     implementation "org.mapstruct:mapstruct:$mapStructVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 

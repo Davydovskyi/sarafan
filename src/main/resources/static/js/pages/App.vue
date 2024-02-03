@@ -14,6 +14,7 @@
 
 <script>
 import MessageList from "../components/messages/MessageList.vue"
+import {addHandler} from "../util/ws"
 
 export default {
   data() {
@@ -24,6 +25,13 @@ export default {
   },
   components: {
     'messages-list': MessageList
+  },
+  created() {
+    addHandler(message => {
+      const index = this.messages.findIndex(m => m.id === message.id)
+      this.messages.splice(index, 1, message)
+      console.log(message)
+    })
   }
 }
 </script>

@@ -12,7 +12,13 @@ module.exports = {
         port: 8000,
         allowedHosts: [
             'localhost:8080'
-        ]
+        ],
+        devMiddleware: {
+            stats: 'errors-only',
+        },
+        client: {
+            logging: 'error',
+        }
     },
     module: {
         rules: [

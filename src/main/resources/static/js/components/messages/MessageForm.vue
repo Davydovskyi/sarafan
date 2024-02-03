@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import {sendMessage} from 'util/ws'
+
 export default {
   props: ['messageAttribute', 'messages'],
   data() {
@@ -24,23 +26,33 @@ export default {
   },
   methods: {
     async onSubmit() {
-      try {
-        if (this.editing) {
-          const response = await this.$axios.put(`/messages/${this.messageAttribute.id}`, {text: this.text})
-          const index = this.messages.findIndex(m => m.id === response.data.id)
-          this.messages.splice(index, 1, response.data)
-          console.log(response)
-        } else {
-          const response = await this.$axios.post('/messages', {text: this.text})
-          this.messages.push(response.data)
-          console.log(response)
-        }
-        this.editing = false
-        this.text = ''
-      } catch (e) {
-        console.error('Error submitting message:', e)
-        alert(e.response.data.message)
+      if (this.editing) {
+        sendMessage({id: this.messageAttribute.id, text: this.text})
+      } else {
+        const response = await this.$axios.post('/messages', {text: this.text})
+        this.messages.push(response.data)
+        console.log(response)
       }
+      this.editing = false
+      this.text = ''
+
+      // try {
+      //   if (this.editing) {
+      //     const response = await this.$axios.put(`/messages/${this.messageAttribute.id}`, {text: this.text})
+      //     const index = this.messages.findIndex(m => m.id === response.data.id)
+      //     this.messages.splice(index, 1, response.data)
+      //     console.log(response)
+      //   } else {
+      //     const response = await this.$axios.post('/messages', {text: this.text})
+      //     this.messages.push(response.data)
+      //     console.log(response)
+      //   }
+      //   this.editing = false
+      //   this.text = ''
+      // } catch (e) {
+      //   console.error('Error submitting message:', e)
+      //   alert(e.response.data.message)
+      // }
     }
   }
 }

@@ -9,6 +9,7 @@
     "start": "webpack-dev-server"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.6.7",
     "vue": "^3.4.15"
   },

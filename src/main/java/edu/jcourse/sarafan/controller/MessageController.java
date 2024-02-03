@@ -5,6 +5,8 @@ import edu.jcourse.sarafan.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -46,5 +48,12 @@ public class MessageController {
         return messageService.deleteById(id) ?
                 ResponseEntity.noContent().build() :
                 ResponseEntity.notFound().build();
+    }
+
+    @MessageMapping("/change")
+    @SendTo("/topic/activity")
+    public MessageDto change(MessageDto message) {
+        return messageService.update(message.id(), message)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
