@@ -30,14 +30,14 @@ public class MainController {
                         @AuthenticationPrincipal OidcUser oidcUser) {
         Map<String, Object> data = new HashMap<>();
 
-        UserDto user = Optional.ofNullable(oidcUser)
+        Optional.ofNullable(oidcUser)
                 .map(OidcUser::getUserInfo)
                 .map(OidcUserInfo::getClaims)
                 .map(claims -> (UserDto) claims.get("user"))
-                .orElse(null);
-
-        data.put("profile", user);
-        data.put("messages", messageService.findAll());
+                .ifPresent(userDto -> {
+                    data.put("profile", userDto);
+                    data.put("messages", messageService.findAll());
+                });
 
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(activeProfile));

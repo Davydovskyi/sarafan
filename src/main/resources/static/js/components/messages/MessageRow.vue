@@ -1,11 +1,15 @@
 <template>
-  <div>
-    <i>{{ message.id }}. </i> {{ message.text }}
-    <span style="position: absolute; right: 0">
-      <button @click='update' class="btn btn-warning btn-sm">Update</button>
-      <button @click='del(message.id)' class="btn btn-danger btn-sm">Delete</button>
-    </span>
-  </div>
+  <v-card class="my-2" variant="outlined">
+    <v-card-text>
+      <i>{{ message.id }}. </i> {{ message.text }}
+    </v-card-text>
+    <v-card-actions>
+      <v-btn size="small" @click="update" rounded>Update</v-btn>
+      <v-btn size="small" flat icon @click="del(message.id)">
+        <v-icon icon="delete"/>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>

@@ -1,13 +1,14 @@
 import {Client} from "@stomp/stompjs";
 
 const client = new Client({
-    brokerURL: 'ws://localhost:8080/ws'
+    brokerURL: 'ws://localhost:8080/ws',
+    debug: function () {
+    }
 })
 
 const handlers = []
 
 client.onConnect = frame => {
-    console.log('Connected: ' + frame)
     client.subscribe('/topic/activity', message => {
         handlers.forEach(h => h(JSON.parse(message.body)))
     })
