@@ -35,9 +35,27 @@ export default {
   },
   created() {
     addHandler(message => {
-      const index = this.messages.findIndex(m => m.id === message.id)
-      this.messages.splice(index, 1, message)
-      console.log(message)
+      if (message.type === 'MESSAGE') {
+        const index = this.messages.findIndex(m => m.id === message.body.id)
+
+        switch (message.event) {
+          case 'CREATED':
+          case 'UPDATED':
+            if (index === -1) {
+              this.messages.push(message.body)
+            } else {
+              this.messages.splice(index, 1, message.body)
+            }
+            break
+          case 'DELETED':
+            this.messages.splice(index, 1)
+            break
+          default:
+            console.error(`Unknown event type: "${message.event}"`)
+        }
+      } else {
+        console.error(`Unknown message type: "${message.type}"`)
+      }
     })
   }
 }

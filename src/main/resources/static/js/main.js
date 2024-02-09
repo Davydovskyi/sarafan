@@ -1,12 +1,11 @@
 import * as Vue from 'vue'
-import App from "./pages/App.vue"
 import axiosInstance from './axios-instance'
+import App from "./pages/App.vue"
 import {connect} from './util/ws'
 import {createVuetify} from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {aliases, md} from 'vuetify/iconsets/md'
-
 import 'vuetify/styles'
 
 if (frontendData.profile) {

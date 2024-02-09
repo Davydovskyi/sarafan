@@ -32,7 +32,7 @@ export default {
     },
     async deleteMessage(id) {
       try {
-        const response = await this.$axios.delete(`/messages/${id}`)
+        const response = await this.$axios.delete(id)
         console.log(response);
         if (response.status === 204) {
           const index = this.messages.findIndex(m => m.id === id)

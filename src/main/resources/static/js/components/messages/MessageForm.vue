@@ -10,8 +10,6 @@
 </template>
 
 <script>
-import {sendMessage} from 'util/ws'
-
 export default {
   props: ['messageAttribute', 'messages'],
   data() {
@@ -28,12 +26,25 @@ export default {
   },
   methods: {
     async onSubmit() {
-      if (this.editing) {
-        sendMessage({id: this.messageAttribute.id, text: this.text})
-      } else {
-        const response = await this.$axios.post('/messages', {text: this.text})
-        this.messages.push(response.data)
-        console.log(response)
+      try {
+        if (this.editing) {
+          const response = await this.$axios.update(this.messageAttribute.id, {text: this.text})
+          const index = this.messages.findIndex(m => m.id === response.data.id)
+          this.messages.splice(index, 1, response.data)
+          console.log(response)
+        } else {
+          const response = await this.$axios.add({text: this.text})
+          const index = this.messages.findIndex(m => m.id === response.data.id)
+          if (index !== -1) {
+            this.messages.splice(index, 1, response.data)
+          } else {
+            this.messages.push(response.data)
+          }
+          console.log(response)
+        }
+      } catch (e) {
+        console.error('Error submitting message:', e)
+        alert(e.response.data.message)
       }
       this.editing = false
       this.text = ''
