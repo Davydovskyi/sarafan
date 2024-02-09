@@ -10,44 +10,44 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
-  props: ['messageAttribute', 'messages'],
+  props: ['messageAttribute'],
   data() {
     return {
       text: '',
+      id: '',
       editing: false
     }
   },
   watch: {
     messageAttribute(newVal) {
       this.text = newVal.text
+      this.id = newVal.id
       this.editing = true
     }
   },
   methods: {
-    async onSubmit() {
-      try {
-        if (this.editing) {
-          const response = await this.$axios.update(this.messageAttribute.id, {text: this.text})
-          const index = this.messages.findIndex(m => m.id === response.data.id)
-          this.messages.splice(index, 1, response.data)
-          console.log(response)
-        } else {
-          const response = await this.$axios.add({text: this.text})
-          const index = this.messages.findIndex(m => m.id === response.data.id)
-          if (index !== -1) {
-            this.messages.splice(index, 1, response.data)
-          } else {
-            this.messages.push(response.data)
-          }
-          console.log(response)
-        }
-      } catch (e) {
-        console.error('Error submitting message:', e)
-        alert(e.response.data.message)
+    ...mapActions([
+      'addMessageAction',
+      'updateMessageAction',
+    ]),
+    onSubmit() {
+      const {id, text, editing} = this
+      const message = {id, text}
+
+      if (editing) {
+        this.updateMessageAction(message)
+      } else {
+        this.addMessageAction(message)
       }
-      this.editing = false
-      this.text = ''
+
+      if (editing) {
+        this.editing = false
+        this.text = ''
+        this.id = ''
+      }
     }
   }
 }

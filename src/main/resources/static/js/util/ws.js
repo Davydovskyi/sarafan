@@ -1,4 +1,4 @@
-import {Client} from "@stomp/stompjs";
+import {Client} from '@stomp/stompjs'
 
 const client = new Client({
     brokerURL: 'ws://localhost:8080/ws',
@@ -33,12 +33,12 @@ export function connect() {
 
 export function disconnect() {
     client.deactivate().then(() =>
-        console.log("Disconnected"))
+        console.log('Disconnected'))
 }
 
 export function sendMessage(message) {
     client.publish({
-        destination: "/app/change",
+        destination: '/app/change',
         body: JSON.stringify(message)
-    });
+    })
 }

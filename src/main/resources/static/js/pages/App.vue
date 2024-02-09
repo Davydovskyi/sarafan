@@ -13,48 +13,49 @@
         You should be logged in <a href="/login">Google</a>
       </v-container>
       <v-container class="spacing-playground pa-6" v-if="profile">
-        <messages-list :messages="messages"/>
+        <messages-list/>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import MessageList from "../components/messages/MessageList.vue"
-import {addHandler} from "../util/ws"
+import {mapMutations, mapState} from 'vuex'
+import MessageList from 'components/messages/MessageList.vue'
+import {addHandler} from 'util/ws'
 
 export default {
-  data() {
-    return {
-      messages: frontendData.messages,
-      profile: frontendData.profile
-    }
-  },
   components: {
     'messages-list': MessageList
   },
+  computed: {
+    ...mapState([
+      'profile'
+    ])
+  },
+  methods: {
+    ...mapMutations([
+      'addMessageMutation',
+      'updateMessageMutation',
+      'deleteMessageMutation'
+    ])
+  },
   created() {
     addHandler(message => {
+      const {event, type, body} = message
       if (message.type === 'MESSAGE') {
-        const index = this.messages.findIndex(m => m.id === message.body.id)
-
-        switch (message.event) {
-          case 'CREATED':
-          case 'UPDATED':
-            if (index === -1) {
-              this.messages.push(message.body)
-            } else {
-              this.messages.splice(index, 1, message.body)
-            }
-            break
-          case 'DELETED':
-            this.messages.splice(index, 1)
-            break
-          default:
-            console.error(`Unknown event type: "${message.event}"`)
+        const mutations = {
+          'CREATED': this.addMessageMutation,
+          'UPDATED': this.updateMessageMutation,
+          'DELETED': (body) => this.deleteMessageMutation(body.id),
+        }
+        if (mutations[event]) {
+          mutations[event](body)
+        } else {
+          console.error(`Unknown event type: "${event}"`)
         }
       } else {
-        console.error(`Unknown message type: "${message.type}"`)
+        console.error(`Unknown message type: "${type}"`)
       }
     })
   }

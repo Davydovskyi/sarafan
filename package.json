@@ -11,8 +11,10 @@
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
     "axios": "^1.6.7",
+    "core-js": "^3.35.1",
     "vue": "^3.4.15",
-    "vuetify": "^3.5.2"
+    "vuetify": "^3.5.2",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",

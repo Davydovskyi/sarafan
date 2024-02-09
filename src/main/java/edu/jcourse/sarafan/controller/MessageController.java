@@ -41,6 +41,7 @@ public class MessageController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageDto create(@RequestBody MessageDto message) {
+        System.out.println(message);
         MessageDto messageDto = messageService.create(message);
         wsSender.accept(EventType.CREATED, messageDto);
         return messageDto;
