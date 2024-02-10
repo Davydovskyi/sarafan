@@ -2,32 +2,36 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title>Sarafan</v-toolbar-title>
+      <v-btn
+          variant="text"
+          v-if="profile"
+          :disabled="$route.path === '/'"
+          @click="showMessages">
+        Messages
+      </v-btn>
       <v-spacer></v-spacer>
-      <span v-if="profile">{{ profile.name }}</span>
+      <v-btn
+          variant="text"
+          v-if="profile"
+          :disabled="$route.path === '/profile'"
+          @click="showProfile">
+        {{ profile.name }}
+      </v-btn>
       <v-btn icon v-if="profile" href="/logout">
         <v-icon icon="logout"/>
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container v-if="!profile">
-        You should be logged in <a href="/login">Google</a>
-      </v-container>
-      <v-container class="spacing-playground pa-6" v-if="profile">
-        <messages-list/>
-      </v-container>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import {mapMutations, mapState} from 'vuex'
-import MessageList from 'components/messages/MessageList.vue'
 import {addHandler} from 'util/ws'
 
 export default {
-  components: {
-    'messages-list': MessageList
-  },
   computed: {
     ...mapState([
       'profile'
@@ -38,7 +42,13 @@ export default {
       'addMessageMutation',
       'updateMessageMutation',
       'deleteMessageMutation'
-    ])
+    ]),
+    showProfile() {
+      this.$router.push('/profile')
+    },
+    showMessages() {
+      this.$router.push('/')
+    }
   },
   created() {
     addHandler(message => {
@@ -58,6 +68,11 @@ export default {
         console.error(`Unknown message type: "${type}"`)
       }
     })
+  },
+  beforeMount() {
+    if (!this.profile) {
+      this.$router.replace('/auth')
+    }
   }
 }
 </script>

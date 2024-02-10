@@ -5,7 +5,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn size="small" @click="update" rounded>Update</v-btn>
-      <v-btn size="small" flat icon @click="del(message.id)">
+      <v-btn size="small" variant="flat" icon @click="del(message.id)">
         <v-icon icon="delete"/>
       </v-btn>
     </v-card-actions>
