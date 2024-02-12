@@ -41,6 +41,7 @@ public class MessageController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageDto create(@RequestBody MessageDto message) {
+        message = fillMeta(message);
         MessageDto messageDto = messageService.create(message);
         wsSender.accept(EventType.CREATED, messageDto);
         return messageDto;
@@ -49,6 +50,7 @@ public class MessageController {
     @PutMapping("/{id}")
     public MessageDto update(@PathVariable Long id,
                              @RequestBody MessageDto message) {
+        message = fillMeta(message);
         MessageDto messageDto = messageService.update(id, message)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         wsSender.accept(EventType.UPDATED, messageDto);
@@ -62,5 +64,9 @@ public class MessageController {
         return messageService.deleteById(id) ?
                 ResponseEntity.noContent().build() :
                 ResponseEntity.notFound().build();
+    }
+
+    private MessageDto fillMeta(MessageDto message) {
+        return messageService.fillMeta(message);
     }
 }

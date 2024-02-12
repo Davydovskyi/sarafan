@@ -16,4 +16,12 @@ public class Message extends AuditingEntity<Long> {
     private Long id;
     @Column(name = "text")
     private String text;
+    @Column(name = "link")
+    private String link;
+    @Column(name = "link_title")
+    private String linkTitle;
+    @Column(name = "link_description")
+    private String linkDescription;
+    @Column(name = "link_cover")
+    private String linkCover;
 }

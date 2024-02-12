@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record MessageDto(
-//        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @JsonView(View.Id.class)
         Long id,
 
@@ -32,5 +31,17 @@ public record MessageDto(
         @JsonView(View.FullMessage.class)
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime updatedAt) {
+        LocalDateTime updatedAt,
+
+        @JsonView(View.FullMessage.class)
+        String link,
+        @JsonView(View.FullMessage.class)
+        @JsonProperty("link_title")
+        String linkTitle,
+        @JsonView(View.FullMessage.class)
+        @JsonProperty("link_description")
+        String linkDescription,
+        @JsonView(View.FullMessage.class)
+        @JsonProperty("link_cover")
+        String linkCover) {
 }

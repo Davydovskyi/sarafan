@@ -32,6 +32,8 @@ dependencies {
 
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
