@@ -36,10 +36,11 @@ public class MainController {
         Map<String, Object> data = new HashMap<>();
         ObjectWriter writer = objectMapper.writerWithView(View.FullMessage.class);
 
-        getProfile(oidcUser).ifPresent(userDto -> {
-            data.put("profile", userDto);
-            model.addAttribute("messages", toJson(messageService.findAll(), writer));
-        });
+        getProfile(oidcUser).ifPresentOrElse(userDto -> {
+                    data.put("profile", userDto);
+                    model.addAttribute("messages", toJson(messageService.findAll(), writer));
+                },
+                () -> model.addAttribute("messages", "[]"));
 
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(activeProfile));

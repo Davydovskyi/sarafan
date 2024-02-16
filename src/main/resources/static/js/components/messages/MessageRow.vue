@@ -1,7 +1,22 @@
 <template>
   <v-card class="my-2" variant="outlined">
     <v-card-text>
-      <i>{{ message.id }}. </i> {{ message.text }}
+      <div>
+        <v-avatar v-if="message.user && message.user.user_pic" size="46px">
+          <v-img
+              :src="message.user.user_pic"
+              :alt="message.user.name"
+          ></v-img>
+        </v-avatar>
+
+        <v-avatar color="info" v-else size="46px">
+          <v-icon icon="account_circle"></v-icon>
+        </v-avatar>
+        <span class="pl-4">{{ authorName }}</span>
+      </div>
+      <div class="pt-3">
+        {{ message.text }}
+      </div>
     </v-card-text>
     <media v-if="message.link" :message="message"></media>
     <v-card-actions>
@@ -10,7 +25,7 @@
         <v-icon icon="delete"/>
       </v-btn>
     </v-card-actions>
-        <comment-list :comments="message.comments" :message-id="message.id"></comment-list>
+    <comment-list :comments="message.comments" :message-id="message.id"></comment-list>
   </v-card>
 </template>
 
@@ -22,6 +37,11 @@ import CommentList from "../comment/CommentList.vue";
 export default {
   props: ['message', 'updateMessage'],
   components: {Media, CommentList},
+  computed: {
+    authorName() {
+      return this.message.user ? this.message.user.name : 'unknown'
+    }
+  },
   methods: {
     ...mapActions([
       'deleteMessageAction'

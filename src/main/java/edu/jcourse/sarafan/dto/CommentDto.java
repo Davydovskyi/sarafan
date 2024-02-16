@@ -15,8 +15,10 @@ public record CommentDto(
         Long id,
         @JsonView(View.IdName.class)
         String text,
-        @JsonView(View.FullMessage.class)
+        // second way to solve circular references
+//        @JsonBackReference + @JsonManagedReference in MessageDto on CommentDto field
+        @JsonView(View.FullComment.class)
         MessageDto message,
-        @JsonView(View.FullMessage.class)
+        @JsonView(View.IdName.class)
         UserDto user) {
 }

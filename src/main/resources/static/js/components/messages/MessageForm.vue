@@ -10,9 +10,14 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
+  computed: {
+    ...mapState([
+      'profile'
+    ])
+  },
   props: ['messageAttribute'],
   data() {
     return {
@@ -35,7 +40,9 @@ export default {
     ]),
     onSubmit() {
       const {id, text, editing} = this
-      const message = {id, text}
+      const message = {
+        id, text, user: this.profile
+      }
 
       if (editing) {
         this.updateMessageAction(message)

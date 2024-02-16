@@ -8,7 +8,7 @@
     <title>Sarafan</title>
     <script th:inline="javascript">
         const frontendData = [[${frontendData}]];
-        const messages = JSON.parse([[${messages}]]);
+        const messages = [# th:utext="${messages}" /];
     </script>
 </head>
 <body>

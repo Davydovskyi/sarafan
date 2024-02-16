@@ -41,7 +41,8 @@ export default {
     ...mapMutations([
       'addMessageMutation',
       'updateMessageMutation',
-      'deleteMessageMutation'
+      'deleteMessageMutation',
+      'addCommentMutation'
     ]),
     showProfile() {
       this.$router.push('/profile')
@@ -54,15 +55,24 @@ export default {
     addHandler(message => {
       const {event, type, body} = message
       if (message.type === 'MESSAGE') {
-        const mutations = {
+        const messageMutations = {
           'CREATED': this.addMessageMutation,
           'UPDATED': this.updateMessageMutation,
           'DELETED': (body) => this.deleteMessageMutation(body.id),
         }
-        if (mutations[event]) {
-          mutations[event](body)
+        if (messageMutations[event]) {
+          messageMutations[event](body)
         } else {
-          console.error(`Unknown event type: "${event}"`)
+          console.error(`Unknown event type for message: "${event}"`)
+        }
+      } else if (message.type === 'COMMENT') {
+        const commentMutations = {
+          'CREATED': this.addCommentMutation
+        }
+        if (commentMutations[event]) {
+          commentMutations[event](body)
+        } else {
+          console.error(`Unknown event type for comment: "${event}"`)
         }
       } else {
         console.error(`Unknown message type: "${type}"`)

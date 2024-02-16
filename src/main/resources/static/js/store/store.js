@@ -40,10 +40,11 @@ export const store = createStore({
         },
         addCommentMutation(state, comment) {
             const message = state.messages[findMessageIndex(state, comment.message.id)]
-            if (message) {
+            message.comments = message.comments || []
+            if (!message.comments.find(c => c.id === comment.id)) {
                 message.comments.push(comment)
             }
-        },
+        }
     },
     actions: {
         async addMessageAction({commit, state}, message) {

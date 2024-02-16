@@ -1,9 +1,6 @@
 package edu.jcourse.sarafan.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import edu.jcourse.sarafan.entity.View;
@@ -17,12 +14,16 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+// first way
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // how to solve circular references
 public record MessageDto(
         @JsonView(View.Id.class)
         Long id,
 
         @JsonView(View.IdName.class)
         String text,
+        @JsonView(View.FullMessage.class)
+        UserDto user,
 
         @JsonView(View.FullMessage.class)
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -46,8 +47,8 @@ public record MessageDto(
         @JsonProperty("link_cover")
         String linkCover,
 
-        @JsonView(View.FullMessage.class)
-        UserDto user,
+        // second way to solve circular references
+//        @JsonManagedReference + @JsonBackReference in CommentDto on MessageDto field
         @JsonView(View.FullMessage.class)
         List<CommentDto> comments) {
 }

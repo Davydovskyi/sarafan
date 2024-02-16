@@ -1,11 +1,13 @@
 package edu.jcourse.sarafan.service;
 
+import edu.jcourse.sarafan.dto.EventType;
 import edu.jcourse.sarafan.dto.MessageDto;
 import edu.jcourse.sarafan.dto.MetaData;
-import edu.jcourse.sarafan.entity.Message;
+import edu.jcourse.sarafan.dto.ObjectType;
+import edu.jcourse.sarafan.entity.View;
 import edu.jcourse.sarafan.mapper.MessageMapper;
 import edu.jcourse.sarafan.repository.MessageRepository;
-import lombok.RequiredArgsConstructor;
+import edu.jcourse.sarafan.util.WsSender;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -16,19 +18,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageService {
     private static final String URL_PATTERN = "https?://?[\\w.\\-%/?=&#]+";
     private static final String IMAGE_PATTERN = "\\.(jpeg|jpg|gif|png)$";
+
     private static final Pattern URL_REGEX = Pattern.compile(URL_PATTERN, Pattern.CASE_INSENSITIVE);
     private static final Pattern IMAGE_REGEX = Pattern.compile(IMAGE_PATTERN, Pattern.CASE_INSENSITIVE);
+
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
+    private final BiConsumer<EventType, MessageDto> wsSender;
+
+    public MessageService(MessageRepository messageRepository, MessageMapper messageMapper, WsSender wsSender) {
+        this.messageRepository = messageRepository;
+        this.messageMapper = messageMapper;
+        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, View.IdName.class);
+    }
+
 
     public List<MessageDto> findAll() {
         return messageRepository
@@ -46,24 +58,30 @@ public class MessageService {
     @Transactional
     public MessageDto create(MessageDto messageDto) {
         return Optional.of(messageDto)
+                .map(this::fillMeta)
                 .map(messageMapper::toEntity)
                 .map(messageRepository::save)
                 .map(messageMapper::toDto)
+                .map(dto -> {
+                    wsSender.accept(EventType.CREATED, dto);
+                    return dto;
+                })
                 .orElseThrow();
     }
 
     @Transactional
     public Optional<MessageDto> update(Long id, MessageDto messageDto) {
-//       1. MessageDto build = messageDto.toBuilder().id(id).build();
-        // или так
         return messageRepository.findById(id)
                 .map(entity -> {
-//                    BeanUtils.copyProperties(messageDto, entity, MessageDto.Fields.id); // 2.
-                    messageMapper.copy(messageDto, entity);  // 3
+                    messageMapper.copy(fillMeta(messageDto), entity);
                     return entity;
                 })
                 .map(messageRepository::saveAndFlush)
-                .map(messageMapper::toDto);
+                .map(messageMapper::toDto)
+                .map(dto -> {
+                    wsSender.accept(EventType.UPDATED, dto);
+                    return dto;
+                });
     }
 
     @Transactional
@@ -72,12 +90,13 @@ public class MessageService {
                 .map(entity -> {
                     messageRepository.delete(entity);
                     messageRepository.flush();
+                    wsSender.accept(EventType.DELETED, messageMapper.toDto(entity));
                     return true;
                 })
                 .orElse(false);
     }
 
-    public MessageDto fillMeta(MessageDto message) {
+    private MessageDto fillMeta(MessageDto message) {
         String text = message.text();
         Matcher urlMatcher = URL_REGEX.matcher(text);
         if (urlMatcher.find()) {

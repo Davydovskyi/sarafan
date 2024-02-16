@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <v-layout class="flex-row">
+    <v-layout class="flex-row px-3">
       <v-text-field class="my-2" clearable v-model="text"
                     label="Add comment"
                     variant="outlined"/>
@@ -10,9 +10,14 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
+  computed: {
+    ...mapState([
+      'profile'
+    ])
+  },
   props: ['messageId'],
   data() {
     return {
@@ -26,7 +31,8 @@ export default {
     onSubmit() {
       this.addCommentAction({
         text: this.text,
-        message: {id: this.messageId}
+        message: {id: this.messageId},
+        user: this.profile
       })
       this.text = ''
     }

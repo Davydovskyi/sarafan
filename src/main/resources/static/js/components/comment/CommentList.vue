@@ -3,9 +3,9 @@
     <v-list-subheader>
       Comments
     </v-list-subheader>
-    <comment-item v-for="(comment, index) in comments" :key="comment.id" :comment="comment">
-      <v-divider v-if="index < comments.length - 1"/>
-    </comment-item>
+    <comment-item v-for="(comment, index) in comments"
+                  :key="comment.id" :comment="comment"
+                  :show-divider="index < comments.length - 1"/>
     <comment-form :message-id="messageId"/>
   </v-list>
 </template>
