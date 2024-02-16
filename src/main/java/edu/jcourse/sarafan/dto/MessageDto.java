@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @FieldNameConstants
 @Builder(toBuilder = true)
@@ -43,5 +44,10 @@ public record MessageDto(
         String linkDescription,
         @JsonView(View.FullMessage.class)
         @JsonProperty("link_cover")
-        String linkCover) {
+        String linkCover,
+
+        @JsonView(View.FullMessage.class)
+        UserDto user,
+        @JsonView(View.FullMessage.class)
+        List<CommentDto> comments) {
 }

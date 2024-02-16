@@ -3,20 +3,24 @@ package edu.jcourse.sarafan.controller;
 import edu.jcourse.sarafan.dto.EventType;
 import edu.jcourse.sarafan.dto.MessageDto;
 import edu.jcourse.sarafan.dto.ObjectType;
+import edu.jcourse.sarafan.dto.UserDto;
 import edu.jcourse.sarafan.entity.View;
 import edu.jcourse.sarafan.service.MessageService;
 import edu.jcourse.sarafan.util.WsSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/messages")
-//@RequiredArgsConstructor
 public class MessageController {
 
     private final MessageService messageService;
@@ -40,11 +44,18 @@ public class MessageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageDto create(@RequestBody MessageDto message) {
-        message = fillMeta(message);
-        MessageDto messageDto = messageService.create(message);
-        wsSender.accept(EventType.CREATED, messageDto);
-        return messageDto;
+    public MessageDto create(@RequestBody MessageDto message,
+                             @AuthenticationPrincipal OidcUser oidcUser) {
+        MessageDto filledMessage = fillMeta(message);
+        return getUser(oidcUser)
+                .map(userDto -> {
+                    MessageDto messageDto = messageService.create(filledMessage.toBuilder()
+                            .user(userDto)
+                            .build());
+                    wsSender.accept(EventType.CREATED, messageDto);
+                    return messageDto;
+                })
+                .orElseThrow();
     }
 
     @PutMapping("/{id}")
@@ -68,5 +79,12 @@ public class MessageController {
 
     private MessageDto fillMeta(MessageDto message) {
         return messageService.fillMeta(message);
+    }
+
+    private Optional<UserDto> getUser(OidcUser oidcUser) {
+        return Optional.ofNullable(oidcUser)
+                .map(OidcUser::getUserInfo)
+                .map(OidcUserInfo::getClaims)
+                .map(claims -> (UserDto) claims.get("user"));
     }
 }

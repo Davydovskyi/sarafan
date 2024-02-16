@@ -1,8 +1,12 @@
 package edu.jcourse.sarafan.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import edu.jcourse.sarafan.dto.UserDto;
+import edu.jcourse.sarafan.entity.View;
 import edu.jcourse.sarafan.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
@@ -22,6 +26,7 @@ import java.util.Optional;
 public class MainController {
 
     private final MessageService messageService;
+    private final ObjectMapper objectMapper;
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
@@ -29,18 +34,27 @@ public class MainController {
     public String index(Model model,
                         @AuthenticationPrincipal OidcUser oidcUser) {
         Map<String, Object> data = new HashMap<>();
+        ObjectWriter writer = objectMapper.writerWithView(View.FullMessage.class);
 
-        Optional.ofNullable(oidcUser)
-                .map(OidcUser::getUserInfo)
-                .map(OidcUserInfo::getClaims)
-                .map(claims -> (UserDto) claims.get("user"))
-                .ifPresent(userDto -> {
-                    data.put("profile", userDto);
-                    data.put("messages", messageService.findAll());
-                });
+        getProfile(oidcUser).ifPresent(userDto -> {
+            data.put("profile", userDto);
+            model.addAttribute("messages", toJson(messageService.findAll(), writer));
+        });
 
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(activeProfile));
         return "index";
+    }
+
+    private Optional<UserDto> getProfile(OidcUser oidcUser) {
+        return Optional.ofNullable(oidcUser)
+                .map(OidcUser::getUserInfo)
+                .map(OidcUserInfo::getClaims)
+                .map(claims -> (UserDto) claims.get("user"));
+    }
+
+    @SneakyThrows
+    private String toJson(Object payload, ObjectWriter writer) {
+        return writer.writeValueAsString(payload);
     }
 }

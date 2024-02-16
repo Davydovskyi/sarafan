@@ -3,13 +3,17 @@ package edu.jcourse.sarafan.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = false)
+import java.util.ArrayList;
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = false, exclude = {"comments", "user"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "message")
+@ToString(exclude = {"comments", "user"})
 public class Message extends AuditingEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +28,10 @@ public class Message extends AuditingEntity<Long> {
     private String linkDescription;
     @Column(name = "link_cover")
     private String linkCover;
+    @ManyToOne
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+    private User user;
+    @Builder.Default
+    @OneToMany(mappedBy = "message", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }

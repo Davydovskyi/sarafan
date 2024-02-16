@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.session:spring-session-jdbc'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    implementation "org.postgresql:postgresql:$postgreSqlVersion"
+    implementation "org.postgresql:postgresql:$postgresSqlVersion"
     implementation "org.flywaydb:flyway-core:$flywayDbVersion"
 //    // to avoid error: Unsupported Database - https://github.com/flyway/flyway/issues/3780
     implementation "org.flywaydb:flyway-database-postgresql:$flywayDbVersion"

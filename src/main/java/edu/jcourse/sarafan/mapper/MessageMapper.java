@@ -4,8 +4,8 @@ import edu.jcourse.sarafan.dto.MessageDto;
 import edu.jcourse.sarafan.entity.Message;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
-//        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring",
+        uses = {CommentMapper.class, UserMapper.class})
 public interface MessageMapper {
 
     MessageDto toDto(Message message);
@@ -16,6 +16,8 @@ public interface MessageMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "comments", ignore = true)
     @Mapping(target = "text", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void copy(MessageDto source, @MappingTarget Message target);
 

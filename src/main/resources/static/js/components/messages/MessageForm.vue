@@ -43,10 +43,11 @@ export default {
         this.addMessageAction(message)
       }
 
+      this.text = ''
+      this.id = ''
+
       if (editing) {
         this.editing = false
-        this.text = ''
-        this.id = ''
       }
     }
   }

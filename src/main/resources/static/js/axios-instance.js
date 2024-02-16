@@ -6,7 +6,9 @@ const instance = axios.create({
 })
 
 export default {
-    add: message => instance.post('/messages', message),
-    update: (id, message) => instance.put(`/messages/${id}`, message),
-    delete: id => instance.delete(`/messages/${id}`)
+    addMessage: message => instance.post('/messages', message),
+    updateMessage: (id, message) => instance.put(`/messages/${id}`, message),
+    deleteMessage: id => instance.delete(`/messages/${id}`),
+
+    addComment: comment => instance.post('/comments', comment)
 }

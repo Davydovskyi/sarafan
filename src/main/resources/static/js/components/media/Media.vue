@@ -36,9 +36,7 @@ import YouTube from "./YouTube.vue"
 
 export default {
   props: ['message'],
-  components: {
-    'you-tube': YouTube
-  },
+  components: {YouTube},
   data() {
     return {
       type: 'href',

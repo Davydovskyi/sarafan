@@ -1,7 +1,0 @@
-DROP TABLE IF EXISTS message;
-
-CREATE TABLE message
-(
-    id   BIGSERIAL PRIMARY KEY,
-    text VARCHAR(2048) NOT NULL
-)

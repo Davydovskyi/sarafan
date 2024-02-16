@@ -2,6 +2,7 @@ package edu.jcourse.sarafan.service;
 
 import edu.jcourse.sarafan.dto.MessageDto;
 import edu.jcourse.sarafan.dto.MetaData;
+import edu.jcourse.sarafan.entity.Message;
 import edu.jcourse.sarafan.mapper.MessageMapper;
 import edu.jcourse.sarafan.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;

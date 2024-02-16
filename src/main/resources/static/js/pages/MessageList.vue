@@ -1,12 +1,12 @@
 <template>
   <v-container class="spacing-playground pa-6">
-  <v-layout class="flex-column align-content-space-around justify-start">
-    <message-form :messageAttribute="message"/>
-    <template :key="message.id" v-for="message in sortedMessages">
-      <message-row :message="message"
-                   :updateMessage="updateMessage"/>
-    </template>
-  </v-layout>
+    <v-layout class="flex-column align-content-space-around justify-start">
+      <message-form :messageAttribute="message"/>
+      <template :key="message.id" v-for="message in sortedMessages">
+        <message-row :message="message"
+                     :updateMessage="updateMessage"/>
+      </template>
+    </v-layout>
   </v-container>
 </template>
 
@@ -31,10 +31,7 @@ export default {
       this.message = message
     }
   },
-  components: {
-    'message-row': MessageRow,
-    'message-form': MessageForm
-  }
+  components: {MessageRow, MessageForm}
 }
 </script>
 

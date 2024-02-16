@@ -3,7 +3,7 @@
     <v-layout class="d-flex justify-space-around flex-column">
       <div class="v-toolbar-title mb-2">User Profile</div>
       <v-layout class="d-flex flex-row justify-space-between px-1">
-        <v-img :src="profile.user_pic"/>
+        <v-img :src="profile.user_pic" referrerpolicy="no-referrer"/>
         <v-layout class="d-flex flex-column px-1">
           <div>Name: {{ profile.name }}</div>
           <div>Locale: {{ profile.locale }}</div>
