@@ -6,6 +6,7 @@
         <message-row :message="message"
                      :updateMessage="updateMessage"/>
       </template>
+      <lazy-loader></lazy-loader>
     </v-layout>
   </v-container>
 </template>
@@ -14,6 +15,7 @@
 import {mapGetters} from 'vuex'
 import MessageRow from '../components/messages/MessageRow.vue'
 import MessageForm from '../components/messages/MessageForm.vue'
+import LazyLoader from "../components/LazyLoader.vue";
 
 export default {
   data() {
@@ -31,7 +33,7 @@ export default {
       this.message = message
     }
   },
-  components: {MessageRow, MessageForm}
+  components: {LazyLoader, MessageRow, MessageForm}
 }
 </script>
 

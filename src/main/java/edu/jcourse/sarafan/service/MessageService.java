@@ -13,10 +13,11 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
@@ -41,13 +42,10 @@ public class MessageService {
         this.wsSender = wsSender.getSender(ObjectType.MESSAGE, View.IdName.class);
     }
 
-
-    public List<MessageDto> findAll() {
+    public Page<MessageDto> findAll(Pageable pageable) {
         return messageRepository
-                .findAll()
-                .stream()
-                .map(messageMapper::toDto)
-                .toList();
+                .findAll(pageable)
+                .map(messageMapper::toDto);
     }
 
     public Optional<MessageDto> findById(Long id) {

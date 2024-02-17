@@ -8,8 +8,9 @@ function findMessageIndex(state, messageId) {
 export const store = createStore({
     state() {
         return {
-            messages: messages,
-            profile: frontendData.profile
+            messages,
+            profile: frontendData.profile,
+            metaData: frontendData.metaData
         }
     },
     getters: {
@@ -44,6 +45,19 @@ export const store = createStore({
             if (!message.comments.find(c => c.id === comment.id)) {
                 message.comments.push(comment)
             }
+        },
+        addMessagePageMutation(state, newMessages) {
+            const updatedMessages = newMessages.reduce((result, message) => {
+                result[message.id] = message
+                return result
+            }, {...state.messages})
+            state.messages = Object.values(updatedMessages)
+        },
+        updateTotalPagesMutation(state, totalPages) {
+            state.metaData.totalPages = totalPages
+        },
+        updateCurrentPageMutation(state, currentPage) {
+            state.metaData.page = currentPage
         }
     },
     actions: {
@@ -84,6 +98,18 @@ export const store = createStore({
                 commit('addCommentMutation', response.data)
             } catch (e) {
                 console.error('Error adding comment:', e)
+            }
+        },
+        async loadPageAction({commit, state}) {
+            try {
+                const response = await axiosInstance.loadPage(state.metaData.page + 1)
+                const {content, meta_data} = response.data
+                const {total_pages, page} = meta_data
+                commit('addMessagePageMutation', content)
+                commit('updateTotalPagesMutation', total_pages)
+                commit('updateCurrentPageMutation', Math.min(page, total_pages - 1))
+            } catch (e) {
+                console.error('Error loading page:', e)
             }
         }
     }

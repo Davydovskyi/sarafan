@@ -10,5 +10,7 @@ export default {
     updateMessage: (id, message) => instance.put(`/messages/${id}`, message),
     deleteMessage: id => instance.delete(`/messages/${id}`),
 
-    addComment: comment => instance.post('/comments', comment)
+    addComment: comment => instance.post('/comments', comment),
+
+    loadPage: page => instance.get(`/messages?page=${page}`)
 }
