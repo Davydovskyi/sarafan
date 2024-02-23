@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"subscribers", "subscriptions"})
+@ToString(exclude = {"subscribers", "subscriptions"})
 @Data
 @Builder
 @Entity
@@ -31,4 +34,11 @@ public class User extends AuditingEntity<String> {
     private String locale;
     @Column(name = "last_visit")
     private LocalDateTime lastVisit;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "subscriber")
+    private List<UserSubscription> subscribers = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "subscription")
+    private List<UserSubscription> subscriptions = new ArrayList<>();
 }

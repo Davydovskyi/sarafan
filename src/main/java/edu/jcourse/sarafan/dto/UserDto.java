@@ -25,19 +25,37 @@ import java.util.List;
 public class UserDto implements Serializable {
     @JsonView(View.IdName.class)
     String id;
+
     @JsonView(View.IdName.class)
     String name;
+
     @JsonView(View.IdName.class)
     String userPic;
+
     String email;
+
+    @JsonView(View.FullProfile.class)
     Gender gender;
+
     Role role;
+
+    @JsonView(View.FullProfile.class)
     String locale;
+
+    @JsonView(View.FullProfile.class)
+    transient List<UserSubscriptionDto> subscriptions;
+
+    @JsonView(View.FullProfile.class)
+    transient List<UserSubscriptionDto> subscribers;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonView(View.FullProfile.class)
     LocalDateTime lastVisit;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createdAt;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime updatedAt;

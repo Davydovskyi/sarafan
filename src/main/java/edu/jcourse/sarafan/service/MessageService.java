@@ -39,7 +39,7 @@ public class MessageService {
     public MessageService(MessageRepository messageRepository, MessageMapper messageMapper, WsSender wsSender) {
         this.messageRepository = messageRepository;
         this.messageMapper = messageMapper;
-        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, View.IdName.class);
+        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, View.FullMessage.class);
     }
 
     public Page<MessageDto> findAll(Pageable pageable) {

@@ -14,7 +14,7 @@ export default {
   },
   mounted() {
     window.onscroll = () => {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if ((window.innerHeight + window.scrollY + 0.5) >= document.body.offsetHeight) {
         this.loadPageAction()
       }
     }
